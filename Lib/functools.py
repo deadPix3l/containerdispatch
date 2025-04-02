@@ -944,7 +944,7 @@ def singledispatch(func):
         for the given *cls* registered on *generic_func*.
 
         """
-        cls = cls_obj.__class__
+        cls = (cls_obj if isinstance(cls_obj, type) else cls_obj.__class__)
         nonlocal cache_token
         if cache_token is not None:
             current_token = get_cache_token()
