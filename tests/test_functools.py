@@ -25,12 +25,12 @@ from test.support import threading_helper
 
 import functools
 
-py_functools = import_helper.import_fresh_module('functools',
-                                                 blocked=['_functools'])
-c_functools = import_helper.import_fresh_module('functools',
-                                                fresh=['_functools'])
+py_functools = import_helper.import_fresh_module("functools",
+                                                 blocked=["_functools"])
+c_functools = import_helper.import_fresh_module("functools",
+                                                fresh=["_functools"])
 
-decimal = import_helper.import_fresh_module('decimal', fresh=['_decimal'])
+decimal = import_helper.import_fresh_module("decimal", fresh=["_decimal"])
 
 
 class TestSingleDispatch(unittest.TestCase):
@@ -298,7 +298,7 @@ class TestSingleDispatch(unittest.TestCase):
         if sys.flags.optimize < 2:
             self.assertEqual(g.__doc__, "Simple test")
 
-    @unittest.skipUnless(decimal, 'requires _decimal')
+    @unittest.skipUnless(decimal, "requires _decimal")
     @support.cpython_only
     def test_c_classes(self):
         @functools.singledispatch
@@ -499,12 +499,12 @@ class TestSingleDispatch(unittest.TestCase):
             pass
         @functools.singledispatch
         def fun(a):
-            return 'base A'
+            return "base A"
         @fun.register(A)
         def _(a):
-            return 'fun A'
+            return "fun A"
         aa = AA()
-        self.assertEqual(fun(aa), 'fun A')
+        self.assertEqual(fun(aa), "fun A")
 
     def test_mro_conflicts(self):
         c = collections.abc
@@ -779,15 +779,15 @@ class TestSingleDispatch(unittest.TestCase):
         a.t(0)
         self.assertEqual(a.arg, "int")
         aa = A()
-        self.assertNotHasAttr(aa, 'arg')
-        a.t('')
+        self.assertNotHasAttr(aa, "arg")
+        a.t("")
         self.assertEqual(a.arg, "str")
         aa = A()
-        self.assertNotHasAttr(aa, 'arg')
+        self.assertNotHasAttr(aa, "arg")
         a.t(0.0)
         self.assertEqual(a.arg, "base")
         aa = A()
-        self.assertNotHasAttr(aa, 'arg')
+        self.assertNotHasAttr(aa, "arg")
 
     def test_staticmethod_register(self):
         class A:
@@ -806,12 +806,12 @@ class TestSingleDispatch(unittest.TestCase):
         a = A()
 
         self.assertTrue(A.t(0))
-        self.assertTrue(A.t(''))
+        self.assertTrue(A.t(""))
         self.assertEqual(A.t(0.0), 0.0)
 
     def test_slotted_class(self):
         class Slot:
-            __slots__ = ('a', 'b')
+            __slots__ = ("a", "b")
             @functools.singledispatchmethod
             def go(self, item, arg):
                 pass
@@ -825,7 +825,7 @@ class TestSingleDispatch(unittest.TestCase):
 
     def test_classmethod_slotted_class(self):
         class Slot:
-            __slots__ = ('a', 'b')
+            __slots__ = ("a", "b")
             @functools.singledispatchmethod
             @classmethod
             def go(cls, item, arg):
@@ -842,7 +842,7 @@ class TestSingleDispatch(unittest.TestCase):
 
     def test_staticmethod_slotted_class(self):
         class A:
-            __slots__ = ['a']
+            __slots__ = ["a"]
             @functools.singledispatchmethod
             @staticmethod
             def t(arg):
@@ -858,10 +858,10 @@ class TestSingleDispatch(unittest.TestCase):
         a = A()
 
         self.assertTrue(A.t(0))
-        self.assertTrue(A.t(''))
+        self.assertTrue(A.t(""))
         self.assertEqual(A.t(0.0), 0.0)
         self.assertTrue(a.t(0))
-        self.assertTrue(a.t(''))
+        self.assertTrue(a.t(""))
         self.assertEqual(a.t(0.0), 0.0)
 
     def test_assignment_behavior(self):
@@ -872,7 +872,7 @@ class TestSingleDispatch(unittest.TestCase):
                 return arg
 
         a = A()
-        a.t.foo = 'bar'
+        a.t.foo = "bar"
         a2 = A()
         with self.assertRaises(AttributeError):
             a2.t.foo
@@ -896,7 +896,7 @@ class TestSingleDispatch(unittest.TestCase):
                 return cls("str")
 
         self.assertEqual(A.t(0).arg, "int")
-        self.assertEqual(A.t('').arg, "str")
+        self.assertEqual(A.t("").arg, "str")
         self.assertEqual(A.t(0.0).arg, "base")
 
     def test_callable_register(self):
@@ -919,7 +919,7 @@ class TestSingleDispatch(unittest.TestCase):
             return cls("str")
 
         self.assertEqual(A.t(0).arg, "int")
-        self.assertEqual(A.t('').arg, "str")
+        self.assertEqual(A.t("").arg, "str")
         self.assertEqual(A.t(0.0).arg, "base")
 
     def test_abstractmethod_register(self):
@@ -931,7 +931,7 @@ class TestSingleDispatch(unittest.TestCase):
                 pass
 
         self.assertTrue(Abstract.add.__isabstractmethod__)
-        self.assertTrue(Abstract.__dict__['add'].__isabstractmethod__)
+        self.assertTrue(Abstract.__dict__["add"].__isabstractmethod__)
 
         with self.assertRaises(TypeError):
             Abstract()
@@ -950,7 +950,7 @@ class TestSingleDispatch(unittest.TestCase):
         a = A()
 
         self.assertEqual(a.t(0), "int")
-        self.assertEqual(a.t(''), "str")
+        self.assertEqual(a.t(""), "str")
         self.assertEqual(a.t(0.0), "base")
 
     def test_staticmethod_type_ann_register(self):
@@ -970,7 +970,7 @@ class TestSingleDispatch(unittest.TestCase):
         a = A()
 
         self.assertTrue(A.t(0))
-        self.assertTrue(A.t(''))
+        self.assertTrue(A.t(""))
         self.assertEqual(A.t(0.0), 0.0)
 
     def test_classmethod_type_ann_register(self):
@@ -992,7 +992,7 @@ class TestSingleDispatch(unittest.TestCase):
                 return cls("str")
 
         self.assertEqual(A.t(0).arg, "int")
-        self.assertEqual(A.t('').arg, "str")
+        self.assertEqual(A.t("").arg, "str")
         self.assertEqual(A.t(0.0).arg, "base")
 
     def test_method_wrapping_attributes(self):
@@ -1012,7 +1012,7 @@ class TestSingleDispatch(unittest.TestCase):
                 """My function docstring"""
                 return str(arg)
 
-        prefix = A.__qualname__ + '.'
+        prefix = A.__qualname__ + "."
         for meth in (
             A.func,
             A().func,
@@ -1023,20 +1023,20 @@ class TestSingleDispatch(unittest.TestCase):
         ):
             with self.subTest(meth=meth):
                 self.assertEqual(meth.__module__, __name__)
-                self.assertEqual(type(meth).__module__, 'functools')
+                self.assertEqual(type(meth).__module__, "functools")
                 self.assertEqual(meth.__qualname__, prefix + meth.__name__)
                 self.assertEqual(meth.__doc__,
-                                 ('My function docstring'
+                                 ("My function docstring"
                                   if support.HAVE_DOCSTRINGS
                                   else None))
-                self.assertEqual(meth.__annotations__['arg'], int)
+                self.assertEqual(meth.__annotations__["arg"], int)
 
-        self.assertEqual(A.func.__name__, 'func')
-        self.assertEqual(A().func.__name__, 'func')
-        self.assertEqual(A.cls_func.__name__, 'cls_func')
-        self.assertEqual(A().cls_func.__name__, 'cls_func')
-        self.assertEqual(A.static_func.__name__, 'static_func')
-        self.assertEqual(A().static_func.__name__, 'static_func')
+        self.assertEqual(A.func.__name__, "func")
+        self.assertEqual(A().func.__name__, "func")
+        self.assertEqual(A.cls_func.__name__, "cls_func")
+        self.assertEqual(A().cls_func.__name__, "cls_func")
+        self.assertEqual(A.static_func.__name__, "static_func")
+        self.assertEqual(A().static_func.__name__, "static_func")
 
     def test_method_repr(self):
         class Callable:
@@ -1044,7 +1044,7 @@ class TestSingleDispatch(unittest.TestCase):
                 pass
 
         class CallableWithName:
-            __name__ = 'NOQUALNAME'
+            __name__ = "NOQUALNAME"
             def __call__(self, *args):
                 pass
 
@@ -1065,39 +1065,39 @@ class TestSingleDispatch(unittest.TestCase):
             # No __qualname__, no __name__
             no_name = functools.singledispatchmethod(Callable())
 
-        self.assertEqual(repr(A.__dict__['func']),
-            f'<single dispatch method descriptor {A.__qualname__}.func>')
-        self.assertEqual(repr(A.__dict__['cls_func']),
-            f'<single dispatch method descriptor {A.__qualname__}.cls_func>')
-        self.assertEqual(repr(A.__dict__['static_func']),
-            f'<single dispatch method descriptor {A.__qualname__}.static_func>')
-        self.assertEqual(repr(A.__dict__['no_qualname']),
-            f'<single dispatch method descriptor NOQUALNAME>')
-        self.assertEqual(repr(A.__dict__['no_name']),
-            f'<single dispatch method descriptor ?>')
+        self.assertEqual(repr(A.__dict__["func"]),
+            f"<single dispatch method descriptor {A.__qualname__}.func>")
+        self.assertEqual(repr(A.__dict__["cls_func"]),
+            f"<single dispatch method descriptor {A.__qualname__}.cls_func>")
+        self.assertEqual(repr(A.__dict__["static_func"]),
+            f"<single dispatch method descriptor {A.__qualname__}.static_func>")
+        self.assertEqual(repr(A.__dict__["no_qualname"]),
+            f"<single dispatch method descriptor NOQUALNAME>")
+        self.assertEqual(repr(A.__dict__["no_name"]),
+            f"<single dispatch method descriptor ?>")
 
         self.assertEqual(repr(A.func),
-            f'<single dispatch method {A.__qualname__}.func>')
+            f"<single dispatch method {A.__qualname__}.func>")
         self.assertEqual(repr(A.cls_func),
-            f'<single dispatch method {A.__qualname__}.cls_func>')
+            f"<single dispatch method {A.__qualname__}.cls_func>")
         self.assertEqual(repr(A.static_func),
-            f'<single dispatch method {A.__qualname__}.static_func>')
+            f"<single dispatch method {A.__qualname__}.static_func>")
         self.assertEqual(repr(A.no_qualname),
-            f'<single dispatch method NOQUALNAME>')
+            f"<single dispatch method NOQUALNAME>")
         self.assertEqual(repr(A.no_name),
-            f'<single dispatch method ?>')
+            f"<single dispatch method ?>")
 
         a = A()
         self.assertEqual(repr(a.func),
-            f'<bound single dispatch method {A.__qualname__}.func of {a!r}>')
+            f"<bound single dispatch method {A.__qualname__}.func of {a!r}>")
         self.assertEqual(repr(a.cls_func),
-            f'<bound single dispatch method {A.__qualname__}.cls_func of {a!r}>')
+            f"<bound single dispatch method {A.__qualname__}.cls_func of {a!r}>")
         self.assertEqual(repr(a.static_func),
-            f'<bound single dispatch method {A.__qualname__}.static_func of {a!r}>')
+            f"<bound single dispatch method {A.__qualname__}.static_func of {a!r}>")
         self.assertEqual(repr(a.no_qualname),
-            f'<bound single dispatch method NOQUALNAME of {a!r}>')
+            f"<bound single dispatch method NOQUALNAME of {a!r}>")
         self.assertEqual(repr(a.no_name),
-            f'<bound single dispatch method ? of {a!r}>')
+            f"<bound single dispatch method ? of {a!r}>")
 
     def test_double_wrapped_methods(self):
         def classmethod_friendly_decorator(func):
@@ -1116,7 +1116,7 @@ class TestSingleDispatch(unittest.TestCase):
                     yield str(arg)
                 finally:
                     pass
-                return 'Done'
+                return "Done"
 
             @classmethod_friendly_decorator
             @classmethod
@@ -1133,7 +1133,7 @@ class TestSingleDispatch(unittest.TestCase):
                     yield str(arg)
                 finally:
                     pass
-                return 'Done'
+                return "Done"
 
             @functools.singledispatchmethod
             @classmethod_friendly_decorator
@@ -1151,17 +1151,17 @@ class TestSingleDispatch(unittest.TestCase):
             single_dispatch_foo = foo
 
         self.assertEqual(without_single_dispatch_foo, single_dispatch_foo)
-        self.assertEqual(single_dispatch_foo, '5')
+        self.assertEqual(single_dispatch_foo, "5")
 
         self.assertEqual(
             WithoutSingleDispatch.decorated_classmethod(5),
             WithSingleDispatch.decorated_classmethod(5)
         )
 
-        self.assertEqual(WithSingleDispatch.decorated_classmethod(5), '5')
+        self.assertEqual(WithSingleDispatch.decorated_classmethod(5), "5")
 
         # Behavioural checks now follow
-        for method_name in ('cls_context_manager', 'decorated_classmethod'):
+        for method_name in ("cls_context_manager", "decorated_classmethod"):
             with self.subTest(method=method_name):
                 self.assertEqual(
                     getattr(WithSingleDispatch, method_name).__name__,
@@ -1181,26 +1181,26 @@ class TestSingleDispatch(unittest.TestCase):
         ):
             with self.subTest(meth=meth):
                 self.assertEqual(meth.__doc__,
-                                 ('My function docstring'
+                                 ("My function docstring"
                                   if support.HAVE_DOCSTRINGS
                                   else None))
-                self.assertEqual(meth.__annotations__['arg'], int)
+                self.assertEqual(meth.__annotations__["arg"], int)
 
         self.assertEqual(
             WithSingleDispatch.cls_context_manager.__name__,
-            'cls_context_manager'
+            "cls_context_manager"
         )
         self.assertEqual(
             WithSingleDispatch().cls_context_manager.__name__,
-            'cls_context_manager'
+            "cls_context_manager"
         )
         self.assertEqual(
             WithSingleDispatch.decorated_classmethod.__name__,
-            'decorated_classmethod'
+            "decorated_classmethod"
         )
         self.assertEqual(
             WithSingleDispatch().decorated_classmethod.__name__,
-            'decorated_classmethod'
+            "decorated_classmethod"
         )
 
     def test_invalid_registrations(self):
@@ -1239,7 +1239,7 @@ class TestSingleDispatch(unittest.TestCase):
             "Invalid annotation for 'arg'."
         )
         self.assertEndsWith(str(exc.exception),
-            'typing.Iterable[str] is not a class.'
+            "typing.Iterable[str] is not a class."
         )
 
         with self.assertRaises(TypeError) as exc:
@@ -1250,17 +1250,17 @@ class TestSingleDispatch(unittest.TestCase):
             "Invalid annotation for 'arg'."
         )
         self.assertEndsWith(str(exc.exception),
-            'int | typing.Iterable[str] not all arguments are classes.'
+            "int | typing.Iterable[str] not all arguments are classes."
         )
 
     def test_invalid_positional_argument(self):
         @functools.singledispatch
         def f(*args, **kwargs):
             pass
-        msg = 'f requires at least 1 positional argument'
+        msg = "f requires at least 1 positional argument"
         with self.assertRaisesRegex(TypeError, msg):
             f()
-        msg = 'f requires at least 1 positional argument'
+        msg = "f requires at least 1 positional argument"
         with self.assertRaisesRegex(TypeError, msg):
             f(a=1)
 
@@ -1269,10 +1269,10 @@ class TestSingleDispatch(unittest.TestCase):
             @functools.singledispatchmethod
             def t(self, *args, **kwargs):
                 pass
-        msg = 't requires at least 1 positional argument'
+        msg = "t requires at least 1 positional argument"
         with self.assertRaisesRegex(TypeError, msg):
             A().t()
-        msg = 't requires at least 1 positional argument'
+        msg = "t requires at least 1 positional argument"
         with self.assertRaisesRegex(TypeError, msg):
             A().t(a=1)
 
@@ -1478,7 +1478,7 @@ class TestSingleDispatch(unittest.TestCase):
             return str(item)
 
         self.assertEqual(str(Signature.from_callable(func)),
-                         '(item, arg: int) -> str')
+                         "(item, arg: int) -> str")
 
     def test_method_signatures(self):
         class A:
@@ -1513,10 +1513,10 @@ class TestSingleDispatch(unittest.TestCase):
                 return str(item)
 
         self.assertEqual(str(Signature.from_callable(A.func)),
-                         '(self, item, arg: int) -> str')
+                         "(self, item, arg: int) -> str")
         self.assertEqual(str(Signature.from_callable(A().func)),
-                         '(self, item, arg: int) -> str')
+                         "(self, item, arg: int) -> str")
         self.assertEqual(str(Signature.from_callable(A.cls_func)),
-                         '(cls, item, arg: int) -> str')
+                         "(cls, item, arg: int) -> str")
         self.assertEqual(str(Signature.from_callable(A.static_func)),
-                         '(item, arg: int) -> str')
+                         "(item, arg: int) -> str")

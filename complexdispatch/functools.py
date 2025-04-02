@@ -9,10 +9,10 @@
 #   Copyright (C) 2006 Python Software Foundation.
 # See C source code for _functools credits/copyright
 
-__all__ = ['update_wrapper', 'wraps', 'WRAPPER_ASSIGNMENTS', 'WRAPPER_UPDATES',
-           'total_ordering', 'cache', 'cmp_to_key', 'lru_cache', 'reduce',
-           'partial', 'partialmethod', 'singledispatch', 'singledispatchmethod',
-           'cached_property', 'Placeholder']
+__all__ = ["update_wrapper", "wraps", "WRAPPER_ASSIGNMENTS", "WRAPPER_UPDATES",
+           "total_ordering", "cache", "cmp_to_key", "lru_cache", "reduce",
+           "partial", "partialmethod", "singledispatch", "singledispatchmethod",
+           "cached_property", "Placeholder"]
 
 from abc import get_cache_token
 from collections import namedtuple
@@ -29,9 +29,9 @@ from _thread import RLock
 # update_wrapper() and wraps() are tools to help write
 # wrapper functions that can handle naive introspection
 
-WRAPPER_ASSIGNMENTS = ('__module__', '__name__', '__qualname__', '__doc__',
-                       '__annotate__', '__type_params__')
-WRAPPER_UPDATES = ('__dict__',)
+WRAPPER_ASSIGNMENTS = ("__module__", "__name__", "__qualname__", "__doc__",
+                       "__annotate__", "__type_params__")
+WRAPPER_UPDATES = ("__dict__",)
 def update_wrapper(wrapper,
                    wrapped,
                    assigned = WRAPPER_ASSIGNMENTS,
@@ -126,7 +126,7 @@ def _c3_mro(cls, abcs=None):
 
     """
     for i, base in enumerate(reversed(cls.__bases__)):
-        if hasattr(base, '__abstractmethods__'):
+        if hasattr(base, "__abstractmethods__"):
             boundary = len(cls.__bases__) - i
             break   # Bases up to the last explicit ABC are considered first.
     else:
@@ -163,7 +163,7 @@ def _compose_mro(cls, types):
     bases = set(cls.__mro__)
     # Remove entries which are already present in the __mro__ or unrelated.
     def is_related(typ):
-        return (typ not in bases and hasattr(typ, '__mro__')
+        return (typ not in bases and hasattr(typ, "__mro__")
                                  and not isinstance(typ, GenericAlias)
                                  and issubclass(cls, typ))
     types = [n for n in types if is_related(n)]
@@ -341,7 +341,7 @@ def singledispatch(func):
                     f"{cls!r} is not a class or union type."
                 )
 
-            ann = getattr(cls, '__annotate__', None)
+            ann = getattr(cls, "__annotate__", None)
             if ann is None:
                 raise TypeError(
                     f"Invalid first argument to `register()`: {cls!r}. "
@@ -376,18 +376,18 @@ def singledispatch(func):
                 registry[arg] = func
         else:
             registry[cls] = func
-        if cache_token is None and hasattr(cls, '__abstractmethods__'):
+        if cache_token is None and hasattr(cls, "__abstractmethods__"):
             cache_token = get_cache_token()
         dispatch_cache.clear()
         return func
 
     def wrapper(*args, **kw):
         if not args:
-            raise TypeError(f'{funcname} requires at least '
-                            '1 positional argument')
+            raise TypeError(f"{funcname} requires at least "
+                            "1 positional argument")
         return dispatch(args[0])(*args, **kw)
 
-    funcname = getattr(func, '__name__', 'singledispatch function')
+    funcname = getattr(func, "__name__", "singledispatch function")
     registry[object] = func
     wrapper.register = register
     wrapper.dispatch = dispatch
@@ -424,7 +424,7 @@ class singledispatchmethod:
 
     @property
     def __isabstractmethod__(self):
-        return getattr(self.func, '__isabstractmethod__', False)
+        return getattr(self.func, "__isabstractmethod__", False)
 
     def __repr__(self):
         try:
@@ -433,8 +433,8 @@ class singledispatchmethod:
             try:
                 name = self.func.__name__
             except AttributeError:
-                name = '?'
-        return f'<single dispatch method descriptor {name}>'
+                name = "?"
+        return f"<single dispatch method descriptor {name}>"
 
 class _singledispatchmethod_get:
     def __init__(self, unbound, obj, cls):
@@ -461,25 +461,25 @@ class _singledispatchmethod_get:
             try:
                 name = self.__name__
             except AttributeError:
-                name = '?'
+                name = "?"
         if self._obj is not None:
-            return f'<bound single dispatch method {name} of {self._obj!r}>'
+            return f"<bound single dispatch method {name} of {self._obj!r}>"
         else:
-            return f'<single dispatch method {name}>'
+            return f"<single dispatch method {name}>"
 
     def __call__(self, /, *args, **kwargs):
         if not args:
-            funcname = getattr(self._unbound.func, '__name__',
-                               'singledispatchmethod method')
-            raise TypeError(f'{funcname} requires at least '
-                            '1 positional argument')
+            funcname = getattr(self._unbound.func, "__name__",
+                               "singledispatchmethod method")
+            raise TypeError(f"{funcname} requires at least "
+                            "1 positional argument")
         return self._dispatch(args[0]).__get__(self._obj, self._cls)(*args, **kwargs)
 
     def __getattr__(self, name):
         # Resolve these attributes lazily to speed up creation of
         # the _singledispatchmethod_get instance.
-        if name not in {'__name__', '__qualname__', '__isabstractmethod__',
-                        '__annotations__', '__type_params__'}:
+        if name not in {"__name__", "__qualname__", "__isabstractmethod__",
+                        "__annotations__", "__type_params__"}:
             raise AttributeError
         return getattr(self._unbound.func, name)
 
