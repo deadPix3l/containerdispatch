@@ -1072,9 +1072,9 @@ class TestSingleDispatch(unittest.TestCase):
         self.assertEqual(repr(A.__dict__["static_func"]),
             f"<single dispatch method descriptor {A.__qualname__}.static_func>")
         self.assertEqual(repr(A.__dict__["no_qualname"]),
-            f"<single dispatch method descriptor NOQUALNAME>")
+            "<single dispatch method descriptor NOQUALNAME>")
         self.assertEqual(repr(A.__dict__["no_name"]),
-            f"<single dispatch method descriptor ?>")
+            "<single dispatch method descriptor ?>")
 
         self.assertEqual(repr(A.func),
             f"<single dispatch method {A.__qualname__}.func>")
@@ -1083,9 +1083,9 @@ class TestSingleDispatch(unittest.TestCase):
         self.assertEqual(repr(A.static_func),
             f"<single dispatch method {A.__qualname__}.static_func>")
         self.assertEqual(repr(A.no_qualname),
-            f"<single dispatch method NOQUALNAME>")
+            "<single dispatch method NOQUALNAME>")
         self.assertEqual(repr(A.no_name),
-            f"<single dispatch method ?>")
+            "<single dispatch method ?>")
 
         a = A()
         self.assertEqual(repr(a.func),
