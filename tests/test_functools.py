@@ -468,15 +468,15 @@ class TestSingleDispatch(unittest.TestCase):
     def test_c3_abc(self):
         c = collections.abc
         mro = functools._c3_mro
-        class A(object):
+        class A:
             pass
         class B(A):
             def __len__(self):
                 return 0   # implies Sized
         @c.Container.register
-        class C(object):
+        class C:
             pass
-        class D(object):
+        class D:
             pass   # unrelated
         class X(D, C, B):
             def __call__(self):
