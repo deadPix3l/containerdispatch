@@ -11,8 +11,8 @@ import contextlib
 from inspect import Signature
 
 import functools
-from complexdispatch import singledispatch, singledispatchmethod
-from complexdispatch.utils import _pep585_registry_matches
+from containerdispatch import singledispatch, singledispatchmethod
+from containerdispatch.utils import _pep585_registry_matches
 
 import decimal
 
@@ -1005,7 +1005,7 @@ class TestSingleDispatch(unittest.TestCase):
         ):
             with self.subTest(meth=meth):
                 self.assertEqual(meth.__module__, __name__)
-                self.assertEqual(type(meth).__module__, "complexdispatch.main")
+                self.assertEqual(type(meth).__module__, "containerdispatch.main")
                 self.assertEqual(meth.__qualname__, prefix + meth.__name__)
                 self.assertEqual(meth.__doc__, "My function docstring")
                 self.assertEqual(meth.__annotations__["arg"], int)

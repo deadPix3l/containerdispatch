@@ -1,5 +1,5 @@
 from functools import _compose_mro
-from complexdispatch.utils import _pep585_registry_matches
+from containerdispatch.utils import _pep585_registry_matches
 
 def _find_impl_match(cls_obj, registry):
     """Returns the best matching implementation from *registry* for type *cls_obj*.

@@ -28,9 +28,9 @@ WRAPPER_ASSIGNMENTS = ("__module__", "__name__", "__qualname__", "__doc__",
 WRAPPER_UPDATES = ("__dict__",)
 
 from functools import update_wrapper
-from complexdispatch.mro import *
-from complexdispatch.find_impl import _find_impl
-from complexdispatch.utils import _pep585_registry_matches
+from containerdispatch.mro import *
+from containerdispatch.find_impl import _find_impl
+from containerdispatch.utils import _pep585_registry_matches
 
 ################################################################################
 ### singledispatch() - single-dispatch generic function decorator
