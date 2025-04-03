@@ -8,14 +8,11 @@
 __all__ = ["singledispatch", "singledispatchmethod"]
 
 from abc import get_cache_token
-from collections import namedtuple
-# import weakref  # Deferred to single_dispatch()
-from operator import itemgetter
-from reprlib import recursive_repr
-from types import GenericAlias, MethodType, MappingProxyType, UnionType
-from _thread import RLock
+import weakref
+from types import GenericAlias, MappingProxyType, UnionType
+import typing
 
-from functools import update_wrapper, wraps
+from functools import update_wrapper
 
 from .mro import *
 
@@ -88,6 +85,10 @@ def singledispatch(func):
 
         return _find_impl(cls_obj, registry)
 
+    def _is_union_type(cls):
+        from typing import get_origin, Union
+        return get_origin(cls) in {Union, UnionType}
+
     def _is_valid_dispatch_type(cls):
         if isinstance(cls, type):
             return True
@@ -96,7 +97,7 @@ def singledispatch(func):
             from typing import get_args
             return all(isinstance(arg, (type, UnionType)) for arg in get_args(cls))
 
-        return (isinstance(cls, UnionType) and
+        return (_is_union_type(cls) and
                 all(isinstance(arg, (type, GenericAlias)) for arg in cls.__args__))
 
 
@@ -117,8 +118,9 @@ def singledispatch(func):
                     f"{cls!r} is not a class or union type."
                 )
 
-            ann = getattr(cls, "__annotate__", None)
-            if ann is None:
+            #ann = getattr(cls, "__annotate__", None) # 3.14 only
+            ann = getattr(cls, "__annotations__", {})
+            if not ann:
                 raise TypeError(
                     f"Invalid first argument to `register()`: {cls!r}. "
                     f"Use either `@register(some_class)` or plain `@register` "
@@ -128,26 +130,27 @@ def singledispatch(func):
 
             # only import typing if annotation parsing is necessary
             from typing import get_type_hints
-            from annotationlib import Format, ForwardRef
-            argname, cls = next(iter(get_type_hints(func, format=Format.FORWARDREF).items()))
+            #from annotationlib import Format, ForwardRef # 3.14 only
+            argname, cls = next(iter(get_type_hints(func).items()))
             if not _is_valid_dispatch_type(cls):
-                if isinstance(cls, UnionType):
+                if _is_union_type(cls):
                     raise TypeError(
                         f"Invalid annotation for {argname!r}. "
                         f"{cls!r} not all arguments are classes."
                     )
-                elif isinstance(cls, ForwardRef):
-                    raise TypeError(
-                        f"Invalid annotation for {argname!r}. "
-                        f"{cls!r} is an unresolved forward reference."
-                    )
+                # 3.14 only
+                #elif isinstance(cls, ForwardRef):
+                    #raise TypeError(
+                        #f"Invalid annotation for {argname!r}. "
+                        #f"{cls!r} is an unresolved forward reference."
+                    #)
                 else:
                     raise TypeError(
                         f"Invalid annotation for {argname!r}. "
                         f"{cls!r} is not a class."
                     )
 
-        if isinstance(cls, UnionType):
+        if _is_union_type(cls):
             for arg in cls.__args__:
                 registry[arg] = func
         else:
