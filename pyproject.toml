@@ -1,6 +1,6 @@
 [project]
 name = "containerdispatch"
-version = "0.1.0"
+version = "0.1.2"
 description = "a singledispatch alternative for PEP-585 type hinted functions"
 readme = "README.md"
 requires-python = ">=3.12"

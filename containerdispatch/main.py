@@ -93,6 +93,9 @@ def singledispatch(func):
         if isinstance(cls, type):
             return True
 
+        if isinstance(cls, typing._GenericAlias):
+            return True
+
         if isinstance(cls, GenericAlias):
             from typing import get_args
             return all(isinstance(arg, (type, UnionType)) for arg in get_args(cls))
